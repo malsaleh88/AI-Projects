@@ -1,18 +1,20 @@
+# 🚀 Steps to Build a Gemini AI Chatbot
 
-import google.generativeai as genai
+## 1️⃣ Get an API Key
+- Go to **Google AI Studio** and sign in.
+- Click **"Get API Key"** and copy it.
 
-# Replace with your Google Gemini API Key
-genai.configure(api_key="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")
+## 2️⃣ Install Required Library
+- Use **pip** to install the Gemini AI library.
 
-# Initialize Gemini Model
-model = genai.GenerativeModel("gemini-pro")
+## 3️⃣ Set Up the Chatbot
+- Load the API key.
+- Initialize **Gemini Pro** AI model.
 
-# Function to generate a chatbot response
-def chat_with_gemini(user_input):
-    response = model.generate_content(user_input)
-    return response.text
+## 4️⃣ Send a Message to AI
+- Ask a question (e.g., **"Tell me a joke."**).
+- AI processes the request and generates a response.
 
-# Test chatbot
-user_message = "Tell me a joke."
-response = chat_with_gemini(user_message)
-print("AI:", response)
+## 5️⃣ Receive AI's Response
+- The chatbot prints the joke.
+
