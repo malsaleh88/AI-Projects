@@ -1,0 +1,188 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -140
+      ],
+      "id": "f145d656-3725-4308-81c6-0abe2cca93f6",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -120,
+        -140
+      ],
+      "id": "1d58f18d-8f3f-49da-8c07-6c98f35240c8",
+      "name": "Gmail",
+      "webhookId": "a25b6e1c-3b40-43ea-bae6-f5d4031fbc3a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "8zlrm9LBvDBCXRr2",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2799c783-2b4a-4207-9a80-6592ba3d4204",
+              "name": "From",
+              "value": "={{ $json.From }}",
+              "type": "string"
+            },
+            {
+              "id": "68902203-f25a-4af3-a27d-f8ee587f308a",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "b0e4c096-c483-4c04-8c29-a0332966890e",
+              "name": "snippet",
+              "value": "={{ $json.snippet }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        60,
+        -300
+      ],
+      "id": "bed3ad45-c16b-4f48-b0ea-f8a8efd54fe6",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        -60
+      ],
+      "id": "84b84eb8-ac5d-4ed2-b22b-8daff6293d1e",
+      "name": "When chat message received",
+      "webhookId": "2b4e82ce-314e-4dab-bd31-c4752f196357"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a cybersecurity expert. Evaluate the following email and determine if it might be a security risk.\n\n**Sender:** {{$json[\"From\"]}}\n**Subject:** {{$json[\"Subject\"]}}\n**Snippet:** {{$json[\"snippet\"]}}\n\nIf the email seems potentially harmful, respond with \"Potential Security Risk\".\nIf it appears safe, respond with \"No Risk Detected\".\n {{ $json.From }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        520,
+        -480
+      ],
+      "id": "98e9597a-fad1-4c82-9217-d9f7f500a7f0",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -260
+      ],
+      "id": "39d08653-5721-4a66-a511-83813172a75f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "JUMZKt2mMCaNQgyV",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "72557766-893a-4b01-9202-984467e7f2be",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "225efbf8b8a19918de9db597ec37b0336c6319be960e1a98444f5c84321ea4d5"
+  },
+  "id": "vrYzqsS0BDeMzuT0",
+  "tags": []
+}
